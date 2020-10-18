@@ -3,7 +3,7 @@ root <- "/home/suv87/Work/neurips"
 setwd(root)
 source("./RKDE.R")
 source("./ph-functions.R")
-source("./bottleneck/bottleneck-functions.R")
+source("./Bottleneck/bottleneck-functions.R")
 
 # Set up cores for simulation in parallel
 
