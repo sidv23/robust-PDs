@@ -1,0 +1,80 @@
+---
+title: "Robust Persistence Diagrams"
+subtitle: "Using Reproducing Kernels"
+author: "Siddharth Vishwanath"
+date: "NeurIPS 2020"
+output:
+  md_document:
+    variant: gfm
+
+---
+
+
+```{r setup, include=FALSE,echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source('./RKDE.R')
+source('./ph-functions.R')
+```
+
+This page describes the method to construct robust persistence diagrams, as implemented in our paper [Robust Persistence Diagrams using Reproducing Kernels](https://arxiv.org/abs/2006.10012). 
+
+You will need the following dependencies for implementing the analyses using R. Please run the following code:
+
+``` r
+pkgs <- c("dplyr","plotrix","spatstat","TDA","hitandrun","functional","Rfast","plotly","viridis","plot3D")
+sapply(pkgs, install.packages, character.only=TRUE)
+```
+
+## Here’s an example for computing the persistence diagrams
+
+We start by sampling points $\mathbb{X}_n$ from a circle in 2D with some uniform noise in the enclosing region. 
+
+
+```{r}
+set.seed(2020)
+signal <- circleUnif(400,4)*rnorm(400,1,0.1)
+noise <- matrix(runif(2*1000,-8,8),ncol=2)
+X <- rbind(signal,noise)
+plot(X,asp=1,pch='.')
+draw.circle(0,0,4,border = alpha('red',0.1),lwd=3)
+```
+
+Here are the persistence diagrams. 
+
+### 1. Distance Function Persistence Diagram
+```{r message=FALSE, results='hide'}
+dgm.distFct <- ph.distfun(X,by=0.1,H=0)$diagram
+plot.diagram(dgm.distFct)
+```
+
+
+### 2. DTM Persistence Diagram
+```{r message=FALSE, results='hide'}
+dgm.dtm <- ph.dtm(X,by=0.1,m0 = M0(X,3))$diagram
+plot.diagram(dgm.dtm)
+```
+
+
+### 3. KDE Persistence Diagram
+```{r message=FALSE, results='hide', eval=FALSE}
+dgm.kde <- ph.kde(X,by=0.1,H=bw(X,3))$diagram
+plot.diagram(dgm.kde)
+```
+
+```{r echo=FALSE}
+dgm.kde <- ph.kde(X,by=0.1,H=bw(X,3))$diagram
+plot.diagram(dgm.kde, diagLim = c(0,0.04))
+```
+
+
+
+### 4. Robust Persistence Diagram
+```{r message=FALSE, results='hide', eval=FALSE}
+dgm.rkde <- ph.rkde2(X,by=0.1,H=bw(X,3))$diagram
+plot.diagram(dgm.rkde)
+```
+
+```{r echo=FALSE}
+dgm.rkde <- ph.rkde2(X,by=0.1,H=bw(X,3))$diagram
+plot.diagram(dgm.rkde, diagLim = c(0,0.04))
+```
