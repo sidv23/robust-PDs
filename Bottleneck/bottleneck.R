@@ -1,5 +1,5 @@
 # Preliminaries
-root <- "/home/suv87/Work/neurips"
+root <- "/path/to/root/directory/"
 setwd(root)
 source("./RKDE.R")
 source("./ph-functions.R")
