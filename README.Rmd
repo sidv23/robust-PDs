@@ -5,7 +5,7 @@ author: "Siddharth Vishwanath"
 date: "NeurIPS 2020"
 output:
   md_document:
-    variant: gfm
+    variant: markdown_github
 
 ---
 
@@ -14,6 +14,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 source('./RKDE.R')
 source('./ph-functions.R')
+library(scales)
 ```
 
 This page describes the method to construct robust persistence diagrams, as implemented in our paper [Robust Persistence Diagrams using Reproducing Kernels](https://arxiv.org/abs/2006.10012). 
@@ -35,8 +36,8 @@ set.seed(2020)
 signal <- circleUnif(400,4)*rnorm(400,1,0.1)
 noise <- matrix(runif(2*1000,-8,8),ncol=2)
 X <- rbind(signal,noise)
-plot(X,asp=1,pch='.')
-draw.circle(0,0,4,border = alpha('red',0.1),lwd=3)
+plot(X,asp=1,pch=20,cex=0.4,col=alpha("black",0.7))
+draw.circle(0,0,4,border = alpha('red',0.2),lwd=3)
 ```
 
 Here are the persistence diagrams. 
@@ -61,7 +62,7 @@ dgm.kde <- ph.kde(X,by=0.1,H=bw(X,3))$diagram
 plot.diagram(dgm.kde)
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, results='hide'}
 dgm.kde <- ph.kde(X,by=0.1,H=bw(X,3))$diagram
 plot.diagram(dgm.kde, diagLim = c(0,0.04))
 ```
@@ -74,7 +75,7 @@ dgm.rkde <- ph.rkde2(X,by=0.1,H=bw(X,3))$diagram
 plot.diagram(dgm.rkde)
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, results='hide'}
 dgm.rkde <- ph.rkde2(X,by=0.1,H=bw(X,3))$diagram
 plot.diagram(dgm.rkde, diagLim = c(0,0.04))
 ```
