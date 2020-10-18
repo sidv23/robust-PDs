@@ -14,6 +14,8 @@ sapply(pkgs, install.packages, character.only=TRUE)
 
 We start by sampling points 𝕏<sub>*n*</sub> from a circle in 2D with some uniform noise in the enclosing region. 
 
+$\\bar{X} = \\sum\_{i=1}^n{\\boldsymbol{x}\_i}$
+
 ``` r
 set.seed(2020)
 signal <- circleUnif(100,r=1)*rnorm(100,1,0.1)
