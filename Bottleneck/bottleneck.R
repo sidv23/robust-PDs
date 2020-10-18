@@ -50,13 +50,9 @@ for(k in 1:length(p)){
                     }
 } 
 
-save(a,file='./Bottleneck/a.RData')
 
 # Plots
-
-
 cols <- c('firebrick1','dodgerblue','grey40')
-pal <- c('firebrick1','dodgerblue','grey40')
 
 for(i in 1:5){
   df <- a[[i]]
