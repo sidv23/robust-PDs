@@ -1,0 +1,136 @@
+---
+title: "Experiment - I"
+author: "Siddharth Vishwanath"
+date: "17/10/2020"
+output:
+  md_document:
+    variant: gfm
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(scales)
+library(plot3D)
+```
+
+```{r results='hide', message=FALSE,echo=FALSE}
+root <- "/Users/vishwanathgl/Documents/Github/robust-PDs"
+knitr::opts_knit$set(root.dir = "/Users/vishwanathgl/Documents/Github/robust-PDs")
+library(latex2exp)
+```
+
+```{r echo=FALSE, results='hide', message=FALSE}
+source('./RKDE.R')
+source('./ph-functions.R')
+source('./Clustering/spectral-functions.R')
+
+dims <- c(0,1,2)
+load('./Clustering/data/X.RData')
+load('./Clustering/data/cls.RData')
+load('./Clustering/data/dist-dgms.RData')
+load('./Clustering/data/rkde-dgms.RData')
+ad <- lapply(dist.dgms,function(x)x$diagram)
+rd <- lapply(rkde.dgms,function(x)x$diagram)
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, cache=TRUE}
+Delta.imgs <- pimg.dist.matrix(ad)
+AD <- Delta.imgs[[1]]
+AD1 <- Delta.imgs[[2]]
+AD2 <- Delta.imgs[[3]]
+
+A.Dist  <-  pmax(AD[[1]],AD[[2]],AD[[3]])
+A1.Dist <- pmax(AD1[[1]],AD1[[2]],AD1[[3]])
+A2.Dist <- pmax(AD2[[1]],AD2[[2]],AD2[[3]])
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, cache=TRUE}
+Delta.dgms <- dgm.dist.matrix(rd)
+RD  <- Delta.dgms[[1]]
+RD1 <- Delta.dgms[[2]]
+RD2 <- Delta.dgms[[3]]
+
+R.Dist  <-  pmax(RD[[1]],RD[[2]],RD[[3]])
+R1.Dist <- pmax(RD1[[1]],RD1[[2]],RD1[[3]])
+R2.Dist <- pmax(RD2[[1]],RD2[[2]],RD2[[3]])
+```
+
+
+## Spectral Clustering using Persitent Homology
+
+Load the necessary data. `X.RData` contains 150 three-dimensional point clouds from 6 different classes. `cls.RData` contains the class information. The pre-trained persistence diagram from the distance function, and the robust persistence diagrams are stored in `dist-dgms.RData` and `rkde-dgms.RData`. 
+
+
+```{r eval=FALSE, include=TRUE}
+## Preliminaries
+root <- "/path/to/root/directory/"
+setwd(root)
+
+source('./RKDE.R')
+source('./ph-functions.R')
+source('./Clustering/spectral-functions.R')
+
+## Load the pre-trained Data
+load('./Clustering/data/X.RData')         # Point clouds
+load('./Clustering/data/cls.RData')       # Corresponding class
+load('./Clustering/data/dist-dgms.RData') # Dgm from distance function
+load('./Clustering/data/rkde-dgms.RData') # Robust persistence Dgm
+
+ad <- lapply(dist.dgms,function(x)x$diagram)
+rd <- lapply(rkde.dgms,function(x)x$diagram)
+
+
+
+```
+
+Some sample plots:
+```{r results='hide'}
+set.seed(1)
+idx <- sample(1:25,6,replace = F) + seq(0,125,by=25)
+par(mfrow=c(3,2),oma=c(2,2,2,2),mar=c(1,1,1,1))
+sapply(idx,function(i){
+    P <- X[[i]]
+    scatter3D(P[,1],P[,2],P[,3],col=alpha("black",0.5), pch=20, main=cls[[i]],phi = 30, cex=0.3)
+    return(T)})
+```
+
+Compute the distance matrices:
+```{r eval=FALSE, include=TRUE}
+Delta.imgs <- pimg.dist.matrix(ad)
+Delta.dgms <- dgm.dist.matrix(rd)
+```
+
+
+
+Some sample images for the pairwise distance matrix:
+
+(1). H0, Winf for Persistence Image
+```{r}
+Delta.dgms[[1]][[1]] %>% image(col=viridis(20,option = 'C'))
+```
+
+(2). H0, Winf for Persistence Image
+```{r}
+Delta.imgs[[1]][[1]] %>% image(col=viridis(20,option = 'C'))
+```
+
+The results from spectral clustering:
+```{r message=FALSE, warning=FALSE}
+numclasses <- c(1:6)
+names(numclasses) <- c('noise','sphere','torus','circle','3clust','9clust')
+
+n <- 100
+
+set.seed(2020)
+scc <- clust_rand_index(n,cls,numclasses,Delta.dgms, Delta.imgs)
+scc$summary
+```
+
+
+
+
+
+
+
+
+

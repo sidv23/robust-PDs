@@ -3,7 +3,7 @@ sapply(rkde_packages, require, character.only=T)
 
 
 bw <- function(x,k=3){
-  return(x %>% nndist(k=k) %>% med())
+  return(x %>% nndist(k=k) %>% median())
 }
 
 med_phi <- function(x){
