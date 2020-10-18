@@ -10,10 +10,9 @@ pkgs <- c("dplyr","plotrix","spatstat","TDA","hitandrun","functional","Rfast","p
 sapply(pkgs, install.packages, character.only=TRUE)
 ```
 
-Here’s an example for computing the persistence diagrams
-=============================
+## Here’s an example for computing the persistence diagrams
 
-We start by sampling points from a circle in 2D with some uniform noise in the enclosing region. 
+We start by sampling points 𝕏<sub>*n*</sub from a circle in 2D with some uniform noise in the enclosing region. 
 
 ``` r
 set.seed(2020)
