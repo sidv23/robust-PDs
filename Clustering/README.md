@@ -1,6 +1,10 @@
 ## Spectral Clustering using Persitent Homology
 
-Load the necessary data. `X.RData` contains 150 three-dimensional point
+We describe the spectral clustering experiment from [Section 5, Robust Persistence Diagrams using Reproducing Kernels](https://arxiv.org/abs/2006.10012).
+
+## 1. Load the necessary data
+
+`X.RData` contains 150 three-dimensional point
 clouds from 6 different classes. `cls.RData` contains the class
 information. The pre-trained persistence diagram from the distance
 function, and the robust persistence diagrams are stored in
@@ -25,7 +29,7 @@ ad <- lapply(dist.dgms,function(x)x$diagram)
 rd <- lapply(rkde.dgms,function(x)x$diagram)
 ```
 
-Some sample plots:
+#### Some sample plots:
 
 ``` r
 set.seed(1)
@@ -39,7 +43,7 @@ sapply(idx,function(i){
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-Compute the distance matrices:
+## 2. Compute the distance matrices:
 
 ``` r
 Delta.imgs <- pimg.dist.matrix(ad)
@@ -48,7 +52,7 @@ Delta.dgms <- dgm.dist.matrix(rd)
 
 Some sample images for the pairwise distance matrix:
 
-(1). H0, Winf for Persistence Image
+#### (1). H0, Winf for Persistence Diagram
 
 ``` r
 Delta.dgms[[1]][[1]] %>% image(col=viridis(20,option = 'C'))
@@ -56,7 +60,7 @@ Delta.dgms[[1]][[1]] %>% image(col=viridis(20,option = 'C'))
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
-(2). H0, Winf for Persistence Image
+#### (2). H0, Winf for Persistence Image
 
 ``` r
 Delta.imgs[[1]][[1]] %>% image(col=viridis(20,option = 'C'))
@@ -64,7 +68,7 @@ Delta.imgs[[1]][[1]] %>% image(col=viridis(20,option = 'C'))
 
 ![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
-The results from spectral clustering:
+## 3. The results from spectral clustering:
 
 ``` r
 numclasses <- c(1:6)
@@ -77,7 +81,7 @@ scc <- clust_rand_index(n,cls,numclasses,Delta.dgms, Delta.imgs)
 scc$summary
 ```
 
-    ##           W1        W2      Winf        W1        W2      Winf
+    ##           W1        W2      Winf        L1        L2      Linf
     ## H0 0.9530201 0.9365548 0.9444295 0.7853244 0.8177181 0.7795973
     ## H1 0.9143624 0.8856376 0.8453691 0.8189709 0.8114541 0.7775391
     ## H2 0.8671141 0.7369128 0.7387919 0.8009843 0.7712752 0.7735123
